@@ -3,8 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://your-username.github.io/e-commerce"
-
+  "homepage": "https://your-username.github.io/e-commerce",
   "scripts": {
     "dev": "vite",
     "predeploy": "npm run build",
