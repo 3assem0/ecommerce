@@ -1,0 +1,14 @@
+@media screen and (max-width: 372px) {
+    .addbut{
+      display: block !important;
+      text-align: center;
+      .pricep{
+       /* background-color: antiquewhite; */
+       padding: 5px;
+      }
+      .ratediv{
+       justify-content: center;
+      }
+    }    
+
+   }

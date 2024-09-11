@@ -1,0 +1,18 @@
+@media screen and (max-width: 372px) {
+ .addbut{
+   display: block !important;
+   text-align: center;
+   .pricep{
+    padding: 5px;
+   }
+   .ratediv{
+    justify-content: center;
+   }
+ }    
+ .ratp{
+    margin-top: 8px;
+ }
+}
+.productcont{
+  max-width: 200px;
+}

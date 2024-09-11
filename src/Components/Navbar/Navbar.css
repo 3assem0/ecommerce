@@ -1,0 +1,76 @@
+nav{
+    ul{
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1rem;
+    }
+}
+.signoutbtn{
+    background-color:#000000 ;
+    
+}.signoutbtn:hover{
+    border-bottom: 3px solid gray;
+    border-right: 3px solid gray;
+}
+.navh{
+    font-family: "Sofia", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+.navb{
+    font-family: "Italiana", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.carli p{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.2rem;
+    
+    }
+    .carli img{
+        width:120px;
+    }
+    .carli .shopicon{
+        font-size: 30px;
+    }
+    .carli .shopicon2{
+        font-size: 30px;
+    }
+   
+
+@media screen and (max-width:1023px) {
+    .innernavv{
+        gap: 10px;
+        ul{
+            align-items: center;
+            justify-content: center;
+        }
+        .navlog{
+            width: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+@media screen and (max-width:1170px) {
+    .innernavv{
+        ul{
+            padding: 5px;
+        }
+    }
+    }
+    @media screen and (max-width:1022px) {
+        .innernavv{
+            ul{
+              margin: 0;
+            }
+        }
+        }
+ 
+
+
+
+
+
+

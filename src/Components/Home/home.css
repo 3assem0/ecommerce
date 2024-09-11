@@ -1,0 +1,16 @@
+.adds img{
+ width: 50%;
+ margin-right: auto;
+ margin-top: -20px;
+
+}
+
+@media screen and (max-width:624px) {
+  .adds{
+    flex-direction: column;
+    img{
+        width: 100%;
+    }
+  }
+}
+
