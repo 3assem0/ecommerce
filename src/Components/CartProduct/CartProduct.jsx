@@ -2,98 +2,67 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Bounce, toast } from 'react-toastify';
 
-export default function CartProduct({ product, setCart, cart }) {
-  const [isDecreasLoading, setDecreasLoading] = useState(false);
-  const [isProductCount, setProductCount] = useState(product.count);
-  const [isIncreaseLoading, setIncreaseLoading] = useState(false);
+export default function CartProduct({ product, setCart }) {
+  const [quantity, setQuantity] = useState(product.quantity);
 
-  async function removeProductFromCart(productId) {
-    let { data } = await axios.delete("https://ecommerce.routemisr.com/api/v1/cart/" + productId, {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
-    });
-    setCart(data);
-    toast.success("Product has been removed successfully", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-  }
+  // Remove product from cart
+  const removeProductFromCart = (productId) => {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(item => item._id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    setCart(cart);
+    toast.success("Product has been removed successfully");
+  };
 
-  async function updateProductCount(productId, count) {
-  
-    if (count > product.count) {
-      setIncreaseLoading(true);
-    } else {
-      setDecreasLoading(true);
-    }
-  
-    let { data } = await axios.put('https://ecommerce.routemisr.com/api/v1/cart/' + productId, {
-      count,
-    }, {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
+  // Update product quantity
+  const updateProductQuantity = (newQuantity) => {
+    if (newQuantity < 1) return;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.map(item => {
+      if (item._id === product._id) {
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
     });
-  
-    setCart(data);
-    setIncreaseLoading(false);
-    setDecreasLoading(false);
-    setProductCount(count);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    setCart(cart);
+    setQuantity(newQuantity);
+  };
 
-  }
-  
   return (
-    <div className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
-      <img src={product.product.imageCover} alt="product-image" className="w-full rounded-lg sm:w-40" />
-      <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
-        <div className="mt-5 sm:mt-0">
-          <h2 className="text-lg font-bold text-gray-900">{product.product.title}</h2>
-          <p className="mt-1 text-xs text-gray-700">${product.price}</p>
+    <div className="flex justify-between mb-6 rounded-lg bg-white p-6 shadow-md">
+      <img src={product.imageCover} alt={product.title} className="w-40 rounded-lg" />
+      <div className="flex flex-col justify-between ml-4 flex-grow">
+        <div>
+          <h2 className="text-lg font-bold">{product.title}</h2>
+          <p className="mt-1 text-sm">${product.price.toFixed(2)}</p>
         </div>
-        <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
-          <div className="flex items-center border-gray-100">
-            <button
-              disabled={product.count == 1 || isDecreasLoading}
-              onClick={() => updateProductCount(product.product._id, product.count - 1)}
-              className="cursor-pointer rounded-l bg-gray-100 disabled:hover:bg-gray-100 disabled:hover:text-black py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50 disabled:cursor-not-allowed">
-              {isDecreasLoading ? <i className="fas fa-spinner fa-spin"></i> : '-'}
-            </button>
-            <input
-              onBlur={() => product.count != isProductCount && updateProductCount(product.product._id, Number(isProductCount))}
-              onChange={(e) => setProductCount(Number(e.target.value))}
-              className="h-8 w-8 border bg-white text-center text-xs outline-none"
-              type="number"
-              value={isProductCount}
-              min="1"
-            />
-            <button
-              disabled={isIncreaseLoading}
-              onClick={() => updateProductCount(product.product._id, product.count + 1)}
-              className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50 disabled:hover:bg-gray-100 disabled:hover:text-black disabled:cursor-not-allowed">
-              {isIncreaseLoading ? <i className="fas fa-spinner fa-spin"></i> : '+'}
-            </button>
-          </div>
-          <div className="flex items-center space-x-4">
-            <p className="text-sm">${product.price * product.count}</p>
-            <svg
-              onClick={() => removeProductFromCart(product.product._id)}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </div>
+        <div className="flex items-center mt-4">
+          <button
+            onClick={() => updateProductQuantity(quantity - 1)}
+            disabled={quantity === 1}
+            className="px-2 py-1 bg-gray-200"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => updateProductQuantity(Number(e.target.value))}
+            className="mx-2 w-12 text-center border"
+          />
+          <button
+            onClick={() => updateProductQuantity(quantity + 1)}
+            className="px-2 py-1 bg-gray-200"
+          >
+            +
+          </button>
+          <button
+            onClick={() => removeProductFromCart(product._id)}
+            className="ml-auto text-red-500"
+          >
+            Remove
+          </button>
         </div>
       </div>
     </div>

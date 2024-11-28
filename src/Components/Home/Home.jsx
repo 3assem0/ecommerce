@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+// import React from 'react'
 import Products from '../Products/Products';
 import {Helmet} from "react-helmet";
 import im1 from '/src/imgs/im1.png'
@@ -11,6 +11,8 @@ import"./home.css"
 import { useQuery } from '@tanstack/react-query';
 import 'swiper/css';
 import 'swiper/css/autoplay';
+import Mission from '../Mission/Mission';
+import AboutOwner from '../AboutOwner/AboutOwner';
 
 export default function Home() {
 
@@ -35,12 +37,12 @@ export default function Home() {
 
    {
             <>
-            <div className="adds flex my-5 justify-center flex-wrap">
+            <div className="adds flex my-5 justify-center flex-wrap ">
             <img src={im1} alt="#img" />
             <img src={im2} alt="#img" />
           </div>
           <div className="my-3">
-          <img className="mx-auto" src={im3} alt="#img" />
+          <img className="mx-auto " src={im3} alt="#img" />
           </div>
         
       
@@ -52,6 +54,9 @@ export default function Home() {
    {data?.data.data.map((product,i) => {
     return <Products product={product} key={i}/>
   })}
+    
+<Mission/>
+<AboutOwner/>
     </div>
     </> }
     </div>

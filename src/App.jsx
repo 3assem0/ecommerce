@@ -29,8 +29,8 @@ function App() {
     {
       path: '', element: <Layout/>, children: 
       [
-          {index:true,element:<ProtectedRoute><Home/></ProtectedRoute> },
-          {path:'e-commerce/',element:<ProtectedRoute><Home/></ProtectedRoute> },
+          // {index:true,element:<ProtectedRoute><Home/></ProtectedRoute> },
+          // {path:'e-commerce/',element:<ProtectedRoute><Home/></ProtectedRoute> },
           {path:'login',element: <ProtectAuthRoutes> <Login/> </ProtectAuthRoutes> },
           {path:'register',element:<ProtectAuthRoutes><Register/></ProtectAuthRoutes>},
           {path:'cart',element:<ProtectedRoute><Cart/></ProtectedRoute>},
@@ -42,8 +42,8 @@ function App() {
           {path:'brand',element:<ProtectedRoute><Brand/></ProtectedRoute>},
           {path:'Sale',element:<ProtectedRoute><Sale/></ProtectedRoute>},
           {path:'*',element:<Notfound/>},
-          // {index:true,element:<ProtectedRoute><Home/></ProtectedRoute> },
-// {path:'HalaaBazaar-e-commerce/home',element:<ProtectedRoute><Home/></ProtectedRoute> },
+          {index:true,element:<ProtectedRoute><Home/></ProtectedRoute> },
+{path:'HalaaBazaar-e-commerce/home',element:<ProtectedRoute><Home/></ProtectedRoute> },
 // {path:'HalaaBazaar-e-commerce/login',element: <ProtectAuthRoutes> <Login/> </ProtectAuthRoutes> },
 // {path:'HalaaBazaar-e-commerce/register',element:<ProtectAuthRoutes><Register/></ProtectAuthRoutes>},
 // {path:'HalaaBazaar-e-commerce/cart',element:<ProtectedRoute><Cart/></ProtectedRoute>},

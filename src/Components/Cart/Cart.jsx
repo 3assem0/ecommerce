@@ -1,85 +1,77 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Bounce, toast } from 'react-toastify';
-import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import React, { useEffect, useState } from 'react';
 import CartProduct from '../CartProduct/CartProduct';
-import { Link } from 'react-router-dom';
-import {Helmet} from "react-helmet";
-import"./cart.css"
-export default function Cart() {
+import { toast } from 'react-toastify';
+import './cart.css';
 
-  const [cart, setCart] = useState(null); 
-  const [isLoading, setIsLoading] = useState(true);
+export default function Cart() {
+  const [cart, setCart] = useState([]);
+
   useEffect(() => {
-    getUserCart()
+    getCartData();
   }, []);
 
+  // Fetch cart data from local storage
+  const getCartData = () => {
+    const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(cartData);
+  };
 
-  async function getUserCart(){
-    setIsLoading(true)
-    let {data} = await axios.get("https://ecommerce.routemisr.com/api/v1/cart",
-      
-      {
-      headers:{
-        token: localStorage.getItem("token")
-    }
-    }).finally(()=>{
-      setIsLoading(false)
-    })
-    setCart(data);
+  // Clear the cart
+  const clearCart = () => {
+    localStorage.removeItem('cart');
+    setCart([]);
+    toast.success("Cart has been cleared successfully");
+  };
+
+  if (cart.length === 0) {
+    return <h1 className="text-center text-2xl font-bold">No Products in your cart</h1>;
   }
 
-function ClearCart(){
- axios.delete("https://ecommerce.routemisr.com/api/v1/cart", {
-      headers:{
-        token: localStorage.getItem("token")
-      }
-  }).finally(()=>{
-    setCart(null)
-  })
- 
-  }
-if(isLoading){
-  return <LoadingScreen/>
-}
+  // Calculate total price
+  const totalPrice = cart.reduce((total, product) => total + product.price * product.quantity, 0);
+
   return (
-    <>
-      <Helmet>
-        <title>Cart</title>
-      </Helmet>
+    <div className="pt-10 mb-10 w-full">
+      <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
+      <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
+        {/* Cart products */}
+        <div className="rounded-lg md:w-2/3">
+          {cart.map((product, index) => (
+            <CartProduct key={index} product={product} setCart={setCart} />
+          ))}
+        </div>
 
-    {cart? <div className=" pt-10 mb-10 w-full">
-    <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
-    <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
-      <div className="rounded-lg md:w-2/3">
-        {cart?.data.products.map((product,index) =>{
-          return <CartProduct key={index} product={product} setCart={setCart}/>
-        })
-        }
-      </div>
-     
-      <div className="mt-6 cartwid h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
-        <div className="mb-2 flex justify-between">
-          <p className="text-gray-700">Subtotal</p>
-          <p className="text-gray-700">${cart?.data.totalCartPrice}</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="text-gray-700">Shipping</p>
-          <p className="text-gray-700">$0</p>
-        </div>
-        <hr className="my-4" />
-        <div className="flex justify-between">
-          <p className="text-lg font-bold">Total</p>
-          <div className="">
-            <p className="mb-1 text-lg font-bold">${cart?.data.totalCartPrice} USD</p>
-            <p className="text-sm text-gray-700">including VAT</p>
+        {/* Cart summary */}
+        <div className="mt-6 h-full rounded-lg border bg-white p-6 shadow-md md:mt-0 md:w-1/3">
+          <div className="mb-2 flex justify-between">
+            <p className="text-gray-700">Subtotal</p>
+            <p className="text-gray-700">${totalPrice.toFixed(2)}</p>
           </div>
+          <div className="flex justify-between">
+            <p className="text-gray-700">Shipping</p>
+            <p className="text-gray-700">$0</p>
+          </div>
+          <hr className="my-4" />
+          <div className="flex justify-between">
+            <p className="text-lg font-bold">Total</p>
+            <div>
+              <p className="mb-1 text-lg font-bold">${totalPrice.toFixed(2)} USD</p>
+              <p className="text-sm text-gray-700">including VAT</p>
+            </div>
+          </div>
+          {/* Checkout button */}
+          <button className="mt-6 block text-center w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
+            Check out
+          </button>
         </div>
-        <Link to={"/shippingAddress/" + cart?.data._id} className="mt-6 block text-center w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">Check out</Link>
       </div>
+      {/* Clear Cart button */}
+      <button
+        onClick={clearCart}
+        className="text-red-500 border-2 m-10 border-red-500 rounded-md px-4 py-2 hover:text-white hover:bg-red-500 block mx-auto"
+      >
+        Clear Cart
+      </button>
     </div>
-    <button onClick={ClearCart} className="text-red-500 border-2 m-10 border-red-500 rounded-md px-4 py-2 hover:text-white hover:bg-red-500 block mx-auto ">Clear Cart</button>
-  </div> : <h1 className="text-center min-h-80 text-2xl flex items-center font-bold ">No Products in your cart</h1>}
-  </>
-  )
+  );
 }
